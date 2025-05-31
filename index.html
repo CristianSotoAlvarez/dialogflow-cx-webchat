@@ -27,7 +27,7 @@
       chat.innerHTML += `<div class="user">${message}</div>`;
       input.value = '';
 
-      const response = await fetch('https://replit.com/@cristianalonsot/dialogflow-cx-backend', {
+      const response = await fetch('https://e2da987d-b77a-4872-a909-5187ce34a4ae-00-psjl3t6ye9l3.riker.replit.dev/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: message })
