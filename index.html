@@ -27,7 +27,7 @@
       chat.innerHTML += `<div class="user">${message}</div>`;
       input.value = '';
 
-      const response = await fetch('https://TUNOMBRE.repl.co/chat', {
+      const response = await fetch('https://replit.com/@cristianalonsot/dialogflow-cx-backend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: message })
