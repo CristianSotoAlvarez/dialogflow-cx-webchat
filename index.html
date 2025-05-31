@@ -4,28 +4,11 @@
   <meta charset="UTF-8" />
   <title>Chatbot Hospital</title>
   <style>
-    body {
-      font-family: sans-serif;
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-    }
-    #chat {
-      border: 1px solid #ccc;
-      padding: 10px;
-      height: 400px;
-      overflow-y: scroll;
-    }
-    .bot, .user {
-      margin: 10px 0;
-    }
-    .bot {
-      color: blue;
-    }
-    .user {
-      text-align: right;
-      color: green;
-    }
+    body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+    #chat { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: scroll; }
+    .bot, .user { margin: 10px 0; }
+    .bot { color: blue; }
+    .user { text-align: right; color: green; }
   </style>
 </head>
 <body>
@@ -38,27 +21,21 @@
     async function sendMessage() {
       const input = document.getElementById('input');
       const chat = document.getElementById('chat');
-      const message = input.value.trim();
+      const message = input.value;
       if (!message) return;
 
-      // Mostrar mensaje del usuario
       chat.innerHTML += `<div class="user">${message}</div>`;
       input.value = '';
 
-      try {
-        const response = await fetch('https://e2da987d-b77a-4872-a909-5187ce34a4ae-00-psjl3t6ye9l3.riker.replit.dev/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: message })
-        });
+      const response = await fetch('https://e2da987d-b77a-4872-a909-5187ce34a4ae-00-psjl3t6ye9l3.riker.replit.dev/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: message })
+      });
 
-        const data = await response.json();
-        chat.innerHTML += `<div class="bot">${data.response}</div>`;
-        chat.scrollTop = chat.scrollHeight;
-      } catch (error) {
-        chat.innerHTML += `<div class="bot">⚠️ Error al conectar con el servidor.</div>`;
-        console.error(error);
-      }
+      const data = await response.json();
+      chat.innerHTML += `<div class="bot">${data.response}</div>`;
+      chat.scrollTop = chat.scrollHeight;
     }
   </script>
 </body>
