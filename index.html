@@ -2,39 +2,61 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Chatbot FIN RA PUCV</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chatbot Hospital Gustavo Fricke</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
+      margin: 0;
       padding: 1rem;
-      background: #f0f0f0;
+      background: #f0f2f5;
     }
     #chat {
-      background: #fff;
-      padding: 1rem;
       border: 1px solid #ccc;
-      height: 300px;
+      border-radius: 8px;
+      padding: 1rem;
+      background: white;
+      max-width: 600px;
+      margin: 0 auto;
+      height: 500px;
       overflow-y: auto;
+    }
+    .message {
       margin-bottom: 1rem;
     }
-    .message { margin: 0.5rem 0; }
-    .user { text-align: right; color: blue; }
-    .bot { text-align: left; color: green; }
+    .user {
+      text-align: right;
+      color: blue;
+    }
+    .bot {
+      text-align: left;
+      color: green;
+    }
     #inputContainer {
       display: flex;
+      justify-content: center;
+      margin-top: 1rem;
       gap: 0.5rem;
     }
-    input { flex: 1; padding: 0.5rem; }
-    button { padding: 0.5rem; }
+    input[type="text"] {
+      width: 70%;
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
   </style>
 </head>
 <body>
 
-  <h2>Asistente Virtual - FIN RA PUCV</h2>
+  <h2>Asistente Virtual - Hospital Gustavo Fricke</h2>
+
   <div id="chat"></div>
 
   <div id="inputContainer">
-    <input type="text" id="userInput" placeholder="Escribe o habla..." />
+    <input type="text" id="userInput" placeholder="Escribe tu mensaje..." />
     <button onclick="sendMessage()">Enviar</button>
     <button id="voiceBtn">🎤 Hablar</button>
   </div>
@@ -49,30 +71,63 @@
       div.className = 'message ' + sender;
       div.textContent = text;
       chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
     }
 
-    function sendMessage() {
+    async function sendMessage() {
       const text = userInput.value.trim();
       if (!text) return;
       addMessage(text, 'user');
       userInput.value = '';
-      // Aquí iría el fetch al backend con el mensaje
-      setTimeout(() => addMessage("Respuesta simulada del bot", 'bot'), 500);
+
+      const sessionId = localStorage.getItem('chatSessionId') || Math.random().toString(36).substring(7);
+      localStorage.setItem('chatSessionId', sessionId);
+
+      try {
+        const response = await fetch('https://e2da987d-b77a-4872-a909-5187ce34a4ae-00-psjl3t6ye9l3.riker.replit.dev/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: text,
+            sessionId
+          })
+        });
+
+        const data = await response.json();
+        if (data.response) {
+          addMessage(data.response, 'bot');
+        } else {
+          addMessage('Lo siento, no entendí eso.', 'bot');
+        }
+      } catch (error) {
+        console.error(error);
+        addMessage('Error al conectar con el servidor.', 'bot');
+      }
     }
 
+    // 🎤 Reconocimiento de voz
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
       recognition.lang = 'es-ES';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
 
       voiceBtn.addEventListener('click', () => {
         recognition.start();
       });
 
-      recognition.addEventListener('result', (e) => {
-        const voiceText = e.results[0][0].transcript;
+      recognition.addEventListener('result', (event) => {
+        const voiceText = event.results[0][0].transcript;
         userInput.value = voiceText;
-        sendMessage();
+        sendMessage(); // envía automáticamente
+      });
+
+      recognition.addEventListener('error', (e) => {
+        alert('Error al reconocer voz: ' + e.error);
       });
     } else {
       voiceBtn.disabled = true;
