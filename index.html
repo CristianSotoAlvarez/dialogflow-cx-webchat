@@ -10,7 +10,7 @@
       font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 0;
-      background: #e8edf3;
+      background: #e8edf3;   
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -98,6 +98,15 @@
     #voiceBtn.listening {
       background-color: #d32f2f;
     }
+
+    #listenBotBtn {
+      background-color: #64b5f6;
+      color: white;
+    }
+
+    #listenBotBtn.active {
+      background-color: #1565c0;
+    }
   </style>
 </head>
 <body>
@@ -113,6 +122,7 @@
     <input type="text" id="userInput" placeholder="Escribe tu mensaje..." />
     <button id="sendBtn" onclick="sendMessage()">Enviar</button>
     <button id="voiceBtn">🎤 Hablar</button>
+    <button id="listenBotBtn">🔊 Escuchar</button>
   </div>
 
   <script>
@@ -120,12 +130,44 @@
     const userInput = document.getElementById('userInput');
     const voiceBtn = document.getElementById('voiceBtn');
 
+    let autoReadEnabled = false;
+
+    // Manejo del botón de escuchar respuestas automáticas
+    document.getElementById('listenBotBtn').addEventListener('click', () => {
+      autoReadEnabled = !autoReadEnabled;
+      const btn = document.getElementById('listenBotBtn');
+      btn.classList.toggle('active', autoReadEnabled);
+      btn.textContent = autoReadEnabled ? '🛑 Detener Lectura' : '🔊 Escuchar';
+
+      if (autoReadEnabled) {
+        const messages = document.querySelectorAll('.message.bot');
+        if (messages.length > 0) {
+          const lastMessage = messages[messages.length - 1].innerText.split('Detener')[0].trim();
+          speakText(lastMessage);
+        }
+      }
+    });
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'es-ES';
+        speechSynthesis.speak(utterance);
+      } else {
+        alert('Tu navegador no soporta síntesis de voz.');
+      }
+    }
+
     function addMessage(text, sender) {
       const div = document.createElement('div');
       div.className = 'message ' + sender;
       div.textContent = text;
       chat.appendChild(div);
       chat.scrollTop = chat.scrollHeight;
+
+      if (sender === 'bot' && autoReadEnabled) {
+        speakText(text);
+      }
     }
 
     async function sendMessage() {
@@ -138,7 +180,7 @@
       localStorage.setItem('chatSessionId', sessionId);
 
       try {
-        const response = await fetch('https://e2da987d-b77a-4872-a909-5187ce34a4ae-00-psjl3t6ye9l3.riker.replit.dev/chat', {
+        const response = await fetch('https://e2da987d-b77a-4872-a909-5187ce34a4ae-00-psjl3t6ye9l3.riker.replit.dev/chat',  {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -161,7 +203,7 @@
       }
     }
 
-    // 🎤 Reconocimiento de voz con indicador visual
+    // Reconocimiento de voz
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (SpeechRecognition) {
