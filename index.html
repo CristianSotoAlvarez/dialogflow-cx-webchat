@@ -20,13 +20,6 @@
 
   <div id="chat"></div>
 
-  <!--
-  <div id="inputContainer">
-    <input type="text" id="userInput" placeholder="Escribe tu mensaje..." />
-    <button id="sendBtn" onclick="sendMessage()">Enviar</button>
-    <button id="voiceBtn">🎤 Hablar</button>
-    <button id="listenBotBtn">🔊 Escuchar</button>
-  </div>-->
 
 <div id="inputContainer">
     <input type="text" id="userInput" placeholder="Escribe tu mensaje..." />
@@ -35,11 +28,14 @@
         <ion-icon name="send-outline"></ion-icon>
         <span>Enviar</span>
     </button>
-
+    
+<div class="voice-wrapper">
     <button class="oval-btn" id="voiceBtn">
         <ion-icon name="mic-outline"></ion-icon>
         <span>Hablar</span>
     </button>
+    <div class="tooltip-press">Suelta para enviar</div>
+</div>
 
     <button class="oval-btn" id="listenBotBtn">
         <ion-icon name="volume-high-outline"></ion-icon>

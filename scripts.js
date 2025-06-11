@@ -3,6 +3,10 @@ import CONFIG from './config.js'; //Import de configuracion conexion backend
 const chat = document.getElementById('chat');
 const userInput = document.getElementById('userInput');
 const voiceBtn = document.getElementById('voiceBtn');
+const tooltip = document.querySelector('.tooltip-press');
+let pressTimer;
+
+
 const BACKEND_URL = CONFIG.BACKEND_URL;
 
 let autoReadEnabled = false;
@@ -82,7 +86,7 @@ async function sendMessage() {
 window.sendMessage = sendMessage;
 window.speakText = speakText;
 
-// Reconocimiento de voz
+// Reconocimiento de voz con botón "mantener"
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 if (SpeechRecognition) {
@@ -91,29 +95,127 @@ if (SpeechRecognition) {
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
-    voiceBtn.addEventListener('click', () => {
-    recognition.start();
-    voiceBtn.classList.add('listening');
-    voiceBtn.textContent = '🎤 Escuchando...';
+    let isListening = false;
+
+    // Función para iniciar escucha
+    function startListening() {
+        if (!isListening) {
+            recognition.start();
+            isListening = true;
+            voiceBtn.classList.add('listening');
+            voiceBtn.innerHTML = '<ion-icon name="mic-outline"></ion-icon> Hablar';
+
+        }
+    }
+
+    // Función para detener escucha y enviar mensaje
+    function stopListeningAndSend() {
+
+        if (isListening) {
+            recognition.stop();
+            isListening = false;
+            voiceBtn.classList.remove('listening');
+            voiceBtn.innerHTML = '<ion-icon name="mic-outline"></ion-icon> <span>Hablar</span>';
+        }
+    }
+
+    // Eventos para click sostenido (ratón)
+    voiceBtn.addEventListener('mousedown', startListening);
+    voiceBtn.addEventListener('mouseup', stopListeningAndSend);
+    voiceBtn.addEventListener('mouseleave', stopListeningAndSend); // Opcional: si el mouse sale
+
+    // Eventos para tacto (móvil)
+    voiceBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Evita delay táctil
+        startListening();
+    });
+    voiceBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        stopListeningAndSend();
     });
 
+    // Capturar resultado del reconocimiento
     recognition.addEventListener('result', (event) => {
-    const voiceText = event.results[0][0].transcript;
-    userInput.value = voiceText;
-    sendMessage();
+        const voiceText = event.results[0][0].transcript;
+        userInput.value = voiceText;
+        addMessage(voiceText, 'user'); // Mostrar mensaje del usuario
+        sendVoiceMessage(voiceText); // Enviar automáticamente
     });
 
     recognition.addEventListener('end', () => {
-    voiceBtn.classList.remove('listening');
-    voiceBtn.textContent = '🎤 Hablar';
+        if (isListening) {
+            stopListeningAndSend();
+        }
     });
 
     recognition.addEventListener('error', (e) => {
-    alert('Error al reconocer voz: ' + e.error);
-    voiceBtn.classList.remove('listening');
-    voiceBtn.textContent = '🎤 Hablar';
+        alert('Error al reconocer voz: ' + e.error);
+        stopListeningAndSend();
     });
+
 } else {
     voiceBtn.disabled = true;
-    voiceBtn.innerText = '🎤 No soportado';
+    voiceBtn.innerHTML = '<ion-icon name="mic-outline"></ion-icon> No soportado';
 }
+
+async function sendVoiceMessage(text) {
+    if (!text) return;
+
+    userInput.value = ''; // Limpiar input
+
+    const sessionId = localStorage.getItem('chatSessionId') || Math.random().toString(36).substring(7);
+    localStorage.setItem('chatSessionId', sessionId);
+
+    try {
+        const response = await fetch(BACKEND_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: text,
+                sessionId
+            })
+        });
+
+        const data = await response.json();
+        if (data.response) {
+            addMessage(data.response, 'bot');
+        } else {
+            addMessage('Lo siento, no entendí eso.', 'bot');
+        }
+    } catch (error) {
+        console.error(error);
+        addMessage('Error al conectar con el servidor.', 'bot');
+    }
+}// Mostrar tooltip al mantener presionado (ratón)
+voiceBtn.addEventListener('mousedown', () => {
+    pressTimer = setTimeout(() => {
+        tooltip.classList.add('show');
+    }, 300); // Mostrar tooltip después de 300ms
+});
+
+// Ocultar tooltip al soltar o salir del botón
+voiceBtn.addEventListener('mouseup', () => {
+    clearTimeout(pressTimer);
+    tooltip.classList.remove('show');
+});
+
+voiceBtn.addEventListener('mouseleave', () => {
+    clearTimeout(pressTimer);
+    tooltip.classList.remove('show');
+});
+
+// Para dispositivos táctiles (móviles)
+voiceBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    pressTimer = setTimeout(() => {
+        tooltip.classList.add('show');
+    }, 300);
+});
+
+voiceBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    clearTimeout(pressTimer);
+    tooltip.classList.remove('show');
+});
