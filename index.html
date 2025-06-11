@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chatbot FIN RA PUCV</title>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script> 
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script> 
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   
@@ -17,13 +20,32 @@
 
   <div id="chat"></div>
 
+  <!--
   <div id="inputContainer">
     <input type="text" id="userInput" placeholder="Escribe tu mensaje..." />
     <button id="sendBtn" onclick="sendMessage()">Enviar</button>
     <button id="voiceBtn">🎤 Hablar</button>
     <button id="listenBotBtn">🔊 Escuchar</button>
-  </div>
+  </div>-->
 
+<div id="inputContainer">
+    <input type="text" id="userInput" placeholder="Escribe tu mensaje..." />
+
+    <button class="oval-btn" id="sendBtn" onclick="sendMessage()">
+        <ion-icon name="send-outline"></ion-icon>
+        <span>Enviar</span>
+    </button>
+
+    <button class="oval-btn" id="voiceBtn">
+        <ion-icon name="mic-outline"></ion-icon>
+        <span>Hablar</span>
+    </button>
+
+    <button class="oval-btn" id="listenBotBtn">
+        <ion-icon name="volume-high-outline"></ion-icon>
+        <span>Escuchar</span>
+    </button>
+</div>
 <script type="module" src="scripts.js"></script>
 
 </body>
