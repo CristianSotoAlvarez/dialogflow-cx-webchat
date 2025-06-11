@@ -12,28 +12,62 @@ const BACKEND_URL = CONFIG.BACKEND_URL;
 
 let autoReadEnabled = false;
 
+
+
 // Manejo del botón de escuchar respuestas automáticas
 document.getElementById('listenBotBtn').addEventListener('click', () => {
     autoReadEnabled = !autoReadEnabled;
     const btn = document.getElementById('listenBotBtn');
-    btn.classList.toggle('active', autoReadEnabled);
-    btn.textContent = autoReadEnabled ? '🛑 Detener' : 'Escuchar';
+    const isActive = autoReadEnabled;
 
-    if (autoReadEnabled) {
+    // Cambiar icono y texto dinámicamente
+    if (isActive) {
+        btn.innerHTML = `
+            <ion-icon name="stop-circle-outline"></ion-icon>
+            <span>Detener</span>
+        `;
+        btn.classList.add('active');
+
         const messages = document.querySelectorAll('.message.bot');
         if (messages.length > 0) {
             const lastMessage = messages[messages.length - 1].innerText.split('Detener')[0].trim();
             speakText(lastMessage);
         }
     } else {
-        // Si se desactiva "Escuchar", detén cualquier lectura en curso
-        speechSynthesis.cancel(); // 👈 DETIENES CUALQUIER LECTURA ACTIVA
+        speechSynthesis.cancel(); // Detener lectura inmediatamente
+        btn.innerHTML = `
+            <ion-icon name="volume-high-outline"></ion-icon>
+            <span>Escuchar</span>
+        `;
+        btn.classList.remove('active');
     }
 });
 
+function cleanTextForSpeech(text) {
+    // 1. Eliminar emoticonos y caracteres no deseados
+    const emojiRegex = /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|\uD83E[\uDD00-\uDDFF])/g;
+    let cleaned = text.replace(emojiRegex, '');
+
+    // 2. Eliminar comillas y guiones comunes
+    cleaned = cleaned
+        .replace(/[“”"“]/g, '')     // Comillas dobles y curvas
+        .replace(/[‘’'`]/g, '')     // Comillas simples y apóstrofos
+        .replace(/[-—–]/g, '')      // Guiones largos y cortos
+        .replace(/[*_~`]/g, '')     // Formato tipo Markdown
+        .replace(/\[.*?\]/g, '')    // Links en formato [texto](url)
+        .replace(/https?:\/\/\S+/g, '') // URLs
+
+    // 3. Opcional: eliminar espacios múltiples generados por los reemplazos
+    cleaned = cleaned.replace(/\s+/g, ' ').trim();
+
+    return cleaned;
+}
+
+
 function speakText(text) {
     if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(text);
+        const cleanedText = cleanTextForSpeech(text); // Limpiamos antes de hablar
+        const utterance = new SpeechSynthesisUtterance(cleanedText);
         utterance.lang = 'es-ES';
         currentUtterance = utterance;
 
@@ -51,7 +85,8 @@ function addMessage(text, sender) {
     chat.scrollTop = chat.scrollHeight;
 
     if (sender === 'bot' && autoReadEnabled) {
-    speakText(text);
+        const cleanedText = cleanTextForSpeech(text);
+        speakText(cleanedText);
     }
 }
 
