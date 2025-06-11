@@ -78,6 +78,10 @@ async function sendMessage() {
     }
 }
 
+// Hacer funciones globales para que funcionen en onclick
+window.sendMessage = sendMessage;
+window.speakText = speakText;
+
 // Reconocimiento de voz
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
