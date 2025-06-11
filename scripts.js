@@ -1,9 +1,9 @@
+import CONFIG from './config.js'; //Import de configuracion conexion backend
+
 const chat = document.getElementById('chat');
 const userInput = document.getElementById('userInput');
 const voiceBtn = document.getElementById('voiceBtn');
-const BACKEND_URLA = 'https://e2da987d-b77a-4872-a909-5187ce34a4ae-00-psjl3t6ye9l3.riker.replit.dev/chat'; 
-
-const BACKEND_URL = 'https://1710c062-6d15-48bd-8c91-d84e58d2c801-00-3pulep6quvnbk.spock.replit.dev/chat';
+const BACKEND_URL = CONFIG.BACKEND_URL;
 
 let autoReadEnabled = false;
 
