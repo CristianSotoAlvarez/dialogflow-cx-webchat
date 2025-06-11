@@ -99,7 +99,7 @@ async function sendMessage() {
 window.sendMessage = sendMessage;
 window.speakText = speakText;
 
-// Reconocimiento de voz con botón "mantener"
+// Reconocimiento de voz
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 if (SpeechRecognition) {
@@ -113,17 +113,16 @@ if (SpeechRecognition) {
     // Función para iniciar escucha
     function startListening() {
         if (!isListening) {
+            speechSynthesis.cancel(); // Detener lectura si hay alguna
             recognition.start();
             isListening = true;
             voiceBtn.classList.add('listening');
-            voiceBtn.innerHTML = '<ion-icon name="mic-outline"></ion-icon> Hablar';
-
+            voiceBtn.innerHTML = '<ion-icon name="mic-outline"></ion-icon> Escuchando';
         }
     }
 
-    // Función para detener escucha y enviar mensaje
-    function stopListeningAndSend() {
-
+    // Función para detener escucha
+    function stopListening() {
         if (isListening) {
             recognition.stop();
             isListening = false;
@@ -132,19 +131,13 @@ if (SpeechRecognition) {
         }
     }
 
-    // Eventos para click sostenido (ratón)
-    voiceBtn.addEventListener('mousedown', startListening);
-    voiceBtn.addEventListener('mouseup', stopListeningAndSend);
-    voiceBtn.addEventListener('mouseleave', stopListeningAndSend); // Opcional: si el mouse sale
-
-    // Eventos para tacto (móvil)
-    voiceBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Evita delay táctil
-        startListening();
-    });
-    voiceBtn.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        stopListeningAndSend();
+    // Evento: un solo clic para activar/detener
+    voiceBtn.addEventListener('click', () => {
+        if (!isListening) {
+            startListening();
+        } else {
+            stopListening();
+        }
     });
 
     // Capturar resultado del reconocimiento
@@ -155,15 +148,17 @@ if (SpeechRecognition) {
         sendVoiceMessage(voiceText); // Enviar automáticamente
     });
 
+    // Cuando termine la escucha (ej. usuario deja de hablar)
     recognition.addEventListener('end', () => {
         if (isListening) {
-            stopListeningAndSend();
+            stopListening();
         }
     });
 
+    // Manejo de errores
     recognition.addEventListener('error', (e) => {
         alert('Error al reconocer voz: ' + e.error);
-        stopListeningAndSend();
+        stopListening();
     });
 
 } else {
@@ -205,34 +200,4 @@ async function sendVoiceMessage(text) {
         console.error(error);
         addMessage('Error al conectar con el servidor.', 'bot');
     }
-}// Mostrar tooltip al mantener presionado (ratón)
-voiceBtn.addEventListener('mousedown', () => {
-    pressTimer = setTimeout(() => {
-        tooltip.classList.add('show');
-    }, 200); 
-});
-
-// Ocultar tooltip al soltar o salir del botón
-voiceBtn.addEventListener('mouseup', () => {
-    clearTimeout(pressTimer);
-    tooltip.classList.remove('show');
-});
-
-voiceBtn.addEventListener('mouseleave', () => {
-    clearTimeout(pressTimer);
-    tooltip.classList.remove('show');
-});
-
-// Para dispositivos táctiles (móviles)
-voiceBtn.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    pressTimer = setTimeout(() => {
-        tooltip.classList.add('show');
-    }, 200);
-});
-
-voiceBtn.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    clearTimeout(pressTimer);
-    tooltip.classList.remove('show');
-});
+}
