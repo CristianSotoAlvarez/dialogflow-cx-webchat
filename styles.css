@@ -50,13 +50,19 @@ header p {
     overflow-y: auto;
     flex-grow: 1;
     border: 1px solid #444;
+    display: flex;
+    flex-direction: column;
 }
 
 .message {
     margin-bottom: 1rem;
     padding: 0.7rem 1rem;
     border-radius: 8px;
-    max-width: 85%;
+    word-break: break-word;
+    display: flex; /* Usa flexbox */
+    align-items: center; /* Centra verticalmente */
+    gap: 0.5rem; /* Espacio entre elementos dentro del mensaje */
+    max-width: 80%; /* Limita el ancho máximo */
 }
 
 .user {

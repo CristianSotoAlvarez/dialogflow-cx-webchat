@@ -12,7 +12,7 @@ document.getElementById('listenBotBtn').addEventListener('click', () => {
     autoReadEnabled = !autoReadEnabled;
     const btn = document.getElementById('listenBotBtn');
     btn.classList.toggle('active', autoReadEnabled);
-    btn.textContent = autoReadEnabled ? '🛑 Detener Lectura' : '🔊 Escuchar';
+    btn.textContent = autoReadEnabled ? '🛑 Detener' : 'Escuchar';
 
     if (autoReadEnabled) {
     const messages = document.querySelectorAll('.message.bot');
