@@ -120,6 +120,8 @@ async function sendMessage() {
 
     const data = await response.json();
     if (data.response) {
+        console.log('Respuesta del backend:', data);
+
         addMessage(data.response, 'bot');
     } else {
         addMessage('Lo siento, no entendí eso.', 'bot');
