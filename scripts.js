@@ -4,6 +4,7 @@ const chat = document.getElementById('chat');
 const userInput = document.getElementById('userInput');
 const voiceBtn = document.getElementById('voiceBtn');
 const tooltip = document.querySelector('.tooltip-press');
+let currentUtterance = null;
 let pressTimer;
 
 
@@ -19,21 +20,26 @@ document.getElementById('listenBotBtn').addEventListener('click', () => {
     btn.textContent = autoReadEnabled ? '🛑 Detener' : 'Escuchar';
 
     if (autoReadEnabled) {
-    const messages = document.querySelectorAll('.message.bot');
-    if (messages.length > 0) {
-        const lastMessage = messages[messages.length - 1].innerText.split('Detener')[0].trim();
-        speakText(lastMessage);
-    }
+        const messages = document.querySelectorAll('.message.bot');
+        if (messages.length > 0) {
+            const lastMessage = messages[messages.length - 1].innerText.split('Detener')[0].trim();
+            speakText(lastMessage);
+        }
+    } else {
+        // Si se desactiva "Escuchar", detén cualquier lectura en curso
+        speechSynthesis.cancel(); // 👈 DETIENES CUALQUIER LECTURA ACTIVA
     }
 });
 
 function speakText(text) {
     if ('speechSynthesis' in window) {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'es-ES';
-    speechSynthesis.speak(utterance);
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'es-ES';
+        currentUtterance = utterance;
+
+        speechSynthesis.speak(utterance);
     } else {
-    alert('Tu navegador no soporta síntesis de voz.');
+        alert('Tu navegador no soporta síntesis de voz.');
     }
 }
 
@@ -51,7 +57,14 @@ function addMessage(text, sender) {
 
 async function sendMessage() {
     const text = userInput.value.trim();
+
+
     if (!text) return;
+
+    if (autoReadEnabled) {
+    speechSynthesis.cancel(); // Detener cualquier lectura activa antes de enviar
+    }   
+
     addMessage(text, 'user');
     userInput.value = '';
 
@@ -161,6 +174,10 @@ if (SpeechRecognition) {
 async function sendVoiceMessage(text) {
     if (!text) return;
 
+    if (autoReadEnabled) {
+        speechSynthesis.cancel(); // Detener cualquier lectura activa antes de enviar
+    }
+
     userInput.value = ''; // Limpiar input
 
     const sessionId = localStorage.getItem('chatSessionId') || Math.random().toString(36).substring(7);
@@ -192,7 +209,7 @@ async function sendVoiceMessage(text) {
 voiceBtn.addEventListener('mousedown', () => {
     pressTimer = setTimeout(() => {
         tooltip.classList.add('show');
-    }, 300); // Mostrar tooltip después de 300ms
+    }, 200); 
 });
 
 // Ocultar tooltip al soltar o salir del botón
@@ -211,7 +228,7 @@ voiceBtn.addEventListener('touchstart', (e) => {
     e.preventDefault();
     pressTimer = setTimeout(() => {
         tooltip.classList.add('show');
-    }, 300);
+    }, 200);
 });
 
 voiceBtn.addEventListener('touchend', (e) => {
