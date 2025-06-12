@@ -182,7 +182,7 @@ if (SpeechRecognition) {
             recognition.start();
             isListening = true;
             voiceBtn.classList.add('listening');
-            voiceBtn.innerHTML = '<ion-icon name="mic-outline"></ion-icon> Escuchando';
+            voiceBtn.innerHTML = '<ion-icon name="mic-outline"></ion-icon> Hablar';
         }
     }
 

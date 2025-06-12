@@ -21,7 +21,29 @@ header {
     padding: 1rem;
     text-align: center;
     border-bottom: 1px solid #444;
+    display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
 }
+
+@media (min-width: 270px) {
+    header {
+        justify-content: center; 
+        text-align: center;       
+    }
+
+    header .avatar {
+        margin-right: 0;
+    }
+
+
+    header > div {
+        display: inline-block;
+    }
+}
+
+
 
 header h1 {
     margin: 0;
@@ -159,12 +181,12 @@ button {
 }
 
 #listenBotBtn {
-    background-color: #795548; /* Marrón tierra para escuchar bot */
+    background-color: #af694f; /* Marrón tierra para escuchar bot */
     color: white;
 }
 
 #listenBotBtn.active {
-    background-color: #5d4037;
+    background-color: #962c0c;
 }
 
 
@@ -223,5 +245,14 @@ button {
 .tooltip-press.show {
     visibility: visible;
     opacity: 1;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover; /* Mantiene la proporción de la imagen */
+  margin: 5px;
+  vertical-align: middle;
 }
 
