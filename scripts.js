@@ -44,21 +44,21 @@ document.getElementById('listenBotBtn').addEventListener('click', () => {
 });
 
 function cleanTextForSpeech(text) {
-    // 1. Eliminar emoticonos y caracteres no deseados
+    // Eliminar emoticonos y caracteres no deseados
     const emojiRegex = /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|\uD83E[\uDD00-\uDDFF])/g;
     let cleaned = text.replace(emojiRegex, '');
 
-    // 2. Eliminar comillas y guiones comunes
+    // Eliminar comillas y guiones comunes
     cleaned = cleaned
         .replace(/[“”"“]/g, '')     // Comillas dobles y curvas
         .replace(/[‘’'`]/g, '')     // Comillas simples y apóstrofos
-        .replace(/[-—–]/g, '')      // Guiones largos y cortos
+        .replace(/[-—–]/g, ' ')      // Guiones largos y cortos (se reemplaza por un espacio para no romper formato de salas!!!)
         .replace(/[*_~`]/g, '')     // Formato tipo Markdown
         .replace(/\[.*?\]/g, '')    // Links en formato [texto](url)
         .replace(/https?:\/\/\S+/g, '') // URLs
 
-    // 3. Opcional: eliminar espacios múltiples generados por los reemplazos
-    cleaned = cleaned.replace(/\s+/g, ' ').trim();
+    /*eliminar espacios múltiples generados por los reemplazos
+    cleaned = cleaned.replace(/\s+/g, ' ').trim();*/
 
     return cleaned;
 }
@@ -78,15 +78,43 @@ function speakText(text) {
 }
 
 function addMessage(text, sender) {
-    const div = document.createElement('div');
-    div.className = 'message ' + sender;
-    div.textContent = text;
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
+    const cleanedText = cleanTextForSpeech(text); // Para la lectura de voz
 
-    if (sender === 'bot' && autoReadEnabled) {
-        const cleanedText = cleanTextForSpeech(text);
-        speakText(cleanedText);
+    if (sender === 'bot' && text.includes('\n')) {
+        const lines = text.split('\n').filter(line => line.trim() !== '');
+        let delay = 0;
+
+        lines.forEach((line, index) => {
+            setTimeout(() => {
+                const div = document.createElement('div');
+                div.className = 'message ' + sender;
+                div.textContent = line;
+                chat.appendChild(div);
+
+                // Scroll automático solo en cada mensaje
+                chat.scrollTop = chat.scrollHeight;
+            }, delay);
+
+            delay += 200; // Ajusta este valor para velocidad más rápida o lenta
+        });
+
+        // Después de mostrar todas las líneas, leer todo junto
+        setTimeout(() => {
+            if (autoReadEnabled) {
+                speakText(cleanedText);
+            }
+        }, delay);
+
+    } else {
+        const div = document.createElement('div');
+        div.className = 'message ' + sender;
+        div.textContent = text;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+
+        if (sender === 'bot' && autoReadEnabled) {
+            speakText(cleanedText);
+        }
     }
 }
 
