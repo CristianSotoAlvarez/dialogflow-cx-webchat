@@ -147,6 +147,9 @@ async function sendMessage() {
     });
 
     const data = await response.json();
+
+    console.debug('Datos completos recibidos desde la API:', data);
+
     if (data.response) {
         console.log('Respuesta del backend:', data);
 
