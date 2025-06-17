@@ -269,3 +269,34 @@ async function sendVoiceMessage(text) {
         addMessage('Error al conectar con el servidor.', 'bot');
     }
 }
+
+// Manejadores del modal de PDF
+document.addEventListener("DOMContentLoaded", function () {
+    const showPdfBtn = document.getElementById('showPdfBtn');
+    const pdfModal = document.getElementById('pdfModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const pdfViewer = document.getElementById('pdfViewer');
+
+    const PDF_URL = 'assets/documents/tareas.pdf'; // Cambiar por la ruta real
+
+    if (showPdfBtn && pdfModal && closeModalBtn && pdfViewer) {
+        showPdfBtn.addEventListener('click', () => {
+            pdfViewer.src = PDF_URL;
+            pdfModal.style.display = 'block';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            pdfViewer.src = '';
+            pdfModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === pdfModal) {
+                pdfViewer.src = '';
+                pdfModal.style.display = 'none';
+            }
+        });
+    } else {
+        console.warn('Uno o más elementos del DOM no fueron encontrados.');
+    }
+});

@@ -43,7 +43,25 @@
         <ion-icon name="volume-high-outline"></ion-icon>
         <span>Escuchar</span>
     </button>
+
+    <!-- Nuevo botón para mostrar PDF -->
+    <button class="oval-btn" id="showPdfBtn">
+        <ion-icon name="document-text-outline"></ion-icon>
+        <span>Ver Lista de Tareas</span>
+    </button>
+
+<!-- Modal para visualizar PDF -->
+<div id="pdfModal" class="modal">
+    <div class="modal-content">
+        <span id="closeModalBtn">&times;</span>
+        <iframe id="pdfViewer" src="" frameborder="0"></iframe>
+    </div>
 </div>
+
+</div>
+
+
+
 <script type="module" src="scripts.js"></script>
 
 </body>
