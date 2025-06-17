@@ -270,33 +270,29 @@ async function sendVoiceMessage(text) {
     }
 }
 
-// Manejadores del modal de PDF
 document.addEventListener("DOMContentLoaded", function () {
-    const showPdfBtn = document.getElementById('showPdfBtn');
-    const pdfModal = document.getElementById('pdfModal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const pdfViewer = document.getElementById('pdfViewer');
+    const showInstructionsBtn = document.getElementById('showInstructionsBtn');
+    const instructionsModal = document.getElementById('instructionsModal');
+    const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
 
-    const PDF_URL = 'assets/documents/tareas.pdf'; // Cambiar por la ruta real
-
-    if (showPdfBtn && pdfModal && closeModalBtn && pdfViewer) {
-        showPdfBtn.addEventListener('click', () => {
-            pdfViewer.src = PDF_URL;
-            pdfModal.style.display = 'block';
+    if (showInstructionsBtn && instructionsModal && closeInstructionsBtn) {
+        // Abrir modal
+        showInstructionsBtn.addEventListener('click', () => {
+            instructionsModal.style.display = 'block';
         });
 
-        closeModalBtn.addEventListener('click', () => {
-            pdfViewer.src = '';
-            pdfModal.style.display = 'none';
+        // Cerrar modal con X
+        closeInstructionsBtn.addEventListener('click', () => {
+            instructionsModal.style.display = 'none';
         });
 
+        // Cerrar modal haciendo clic fuera del contenido
         window.addEventListener('click', (event) => {
-            if (event.target === pdfModal) {
-                pdfViewer.src = '';
-                pdfModal.style.display = 'none';
+            if (event.target === instructionsModal) {
+                instructionsModal.style.display = 'none';
             }
         });
     } else {
-        console.warn('Uno o más elementos del DOM no fueron encontrados.');
+        console.warn('Uno o más elementos del modal no fueron encontrados.');
     }
 });

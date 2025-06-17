@@ -267,62 +267,57 @@ button {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro semi-transparente */
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
-/* Contenido del modal */
 .modal-content {
     background-color: #fff;
     margin: 5% auto;
-    padding: 15px;
+    padding: 20px;
     border-radius: 8px;
-    width: 90%; /* Más ancho en móvil */
-    max-width: 900px; /* Límite para escritorio */
+    width: 90%;
+    max-width: 600px;
     position: relative;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    min-height: 300px;
+    color: #333;
 }
 
-/* Botón de cerrar (X) */
-#closeModalBtn {
+#closeInstructionsBtn {
     color: #aaa;
-    float: right;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
-    line-height: 1;
+    position: absolute;
+    top: 10px;
+    right: 15px;
 }
 
-#closeModalBtn:hover,
-#closeModalBtn:focus {
+#closeInstructionsBtn:hover,
+#closeInstructionsBtn:focus {
     color: black;
     text-decoration: none;
+    cursor: pointer;
 }
 
-/* iframe del PDF */
-#pdfViewer {
-    width: 100%;
-    height: 600px;
-    border: none;
-    display: block;
+.modal-content h2 {
+    margin-top: 0;
 }
 
-/* Responsive para pantallas pequeñas */
+/* Responsive para móviles */
 @media (max-width: 768px) {
     .modal-content {
         margin-top: 10%;
         width: 95%;
-        height: auto;
+        font-size: 14px;
     }
 
-    #pdfViewer {
-        height: 80vh; /* Ajuste responsivo en móvil */
+    .modal-content h2 {
+        font-size: 1.2rem;
     }
 
-    #closeModalBtn {
+    #closeInstructionsBtn {
         font-size: 24px;
-        position: absolute;
-        top: 10px;
-        right: 15px;
+        top: 5px;
+        right: 10px;
     }
 }

@@ -45,16 +45,59 @@
     </button>
 
     <!-- Nuevo botón para mostrar PDF -->
-    <button class="oval-btn" id="showPdfBtn">
+    <button class="oval-btn" id="showInstructionsBtn">
         <ion-icon name="document-text-outline"></ion-icon>
         <span>Ver Lista de Tareas</span>
     </button>
 
-<!-- Modal para visualizar PDF -->
-<div id="pdfModal" class="modal">
+<!-- Modal de Instrucciones -->
+<div id="instructionsModal" class="modal">
     <div class="modal-content">
-        <span id="closeModalBtn">&times;</span>
-        <iframe id="pdfViewer" src="" frameborder="0"></iframe>
+        <span id="closeInstructionsBtn">&times;</span>
+        <h2>Listado de tareas</h2>
+        <p>Acabas de llegar a la Facultad de Ingeniería de la PUCV y necesitas encontrar ciertos lugares o salas dentro del edificio. Para facilitar tu orientación, se te ha entregado acceso a un chatbot que puede responder a tus preguntas mediante texto o voz.</p>
+
+        <p>Tu misión es utilizar el chatbot para resolver una serie de tareas relacionadas con la localización de espacios dentro de la facultad. Estas tareas están diseñadas para evaluar qué tan útil, preciso y fácil de usar es el asistente conversacional.</p>
+
+        <h3>Tarea 1: Interacción por Texto</h3>
+        <p><strong>Fase 1: Búsqueda de sala</strong></p>
+        <ol>
+            <li>Saluda al chatbot y espera una respuesta de bienvenida.</li>
+            <li>Pregúntale cómo llegar a alguna sala, escoge cualquier sala del piso 0, piso 1, o piso 2 <strong>(ej: ¿Dónde está la sala 0-1?)</strong></li>
+            <li>Revisa las instrucciones para llegar a la sala escogida.</li>
+        </ol>
+
+        <p><strong>Fase 2: Búsqueda de servicios</strong></p>
+        <ol start="4">
+            <li>Pregúntale dónde se encuentra un área común, escoge cualquiera del piso 0, piso 1, o piso 2 <strong>(ej: ¿Dónde está la cafetería?)</strong></li>
+            <li>Revisa las instrucciones para llegar al área común escogida.</li>
+            <li>Pregúntale por más información del área común que escogiste <strong>(ej: ¿Qué sabes de la cafetería?)</strong></li>
+            <li>Pregunta por los baños, luego revisa las instrucciones para llegar <strong>(ej: ¿Dónde están los baños?)</strong></li>
+        </ol>
+
+        <p><strong>Fase 3: Interacciones Comunes</strong></p>
+        <ol start="8">
+            <li>Da las gracias al chatbot.</li>
+            <li>Dile que no tienes más preguntas al chatbot.</li>
+            <li>Despídete del chatbot.</li>
+        </ol>
+
+        <h3>Tarea 2: Interacción por Voz</h3>
+        <p><strong>Fase 1: Búsqueda de lugares</strong></p>
+        <ol>
+            <li>Saluda al chatbot y espera una respuesta de bienvenida.</li>
+            <li>Pregúntale dónde se encuentra alguna sala, escoge cualquier sala del piso 3, piso 4, o piso 5 <strong>(ej: ¿Dónde está la sala 4-7?)</strong></li>
+            <li>Pregúntale dónde se encuentra un área común, escoge cualquiera del piso 0, piso 1, o piso 2 <strong>(ej: ¿Dónde está el comedor?)</strong></li>
+        </ol>
+
+        <p><strong>Fase 2: Interacciones Comunes</strong></p>
+        <ol start="4">
+            <li>Da las gracias al chatbot.</li>
+            <li>Dile que no tienes más preguntas al chatbot.</li>
+            <li>Despídete del chatbot.</li>
+        </ol>
+
+        <p><strong>UNA VEZ FINALIZADO, POR FAVOR, VUELVA A LA ENCUESTA!</strong></p>
     </div>
 </div>
 
