@@ -11,4 +11,4 @@ Este proyecto es el deploy del frontend de un prototipo sobre un chatbot customi
 
 ## Instrucciones sobre el backend
 - El backend **DEBE** estar en funcionamiento para que el chatbot responda.
-- Favor, seguir las instrucciones en la carpeta "Manual"
+- Favor, seguir las instrucciones disponibles en la carpeta "manual"
