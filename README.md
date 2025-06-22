@@ -1,6 +1,6 @@
 # Chatbot Oreintativo - Dialogflow CX webchat
 
-Este proyecto es el deploy del frontend de un chatbot customizado pensado para orientación en instituciones. A continuacón se lista brevemente los componenetes del frontend y como hacerlo funcionar.
+Este proyecto es el deploy del frontend de un prototipo sobre un chatbot customizado pensado para orientación dentro de instituciones o recintos. A continuacón se lista brevemente los componenetes del frontend y como hacerlo funcionar.
 
 ## Caracteristicas
 
